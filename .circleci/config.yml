@@ -1,0 +1,112 @@
+orbs:
+  win: circleci/windows@1.0.0
+
+executors:
+  linux:
+    docker:
+      - image: circleci/node:10.0-browsers
+  mac:
+    macos:
+      xcode: "10.2.0"
+
+commands:
+  install-deps:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ arch }}-{{ checksum "package-lock.json" }}
+            - v1-dependencies-{{ arch }}
+      - run:
+          name: Install deps
+          command: npm i
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ arch }}-{{ checksum "package-lock.json" }}
+  run-test:
+    steps:
+      - run:
+          name: Run test
+          command: npm run test
+      - store_artifacts:
+          path: ./tmp
+  persist_distribution:
+    steps:
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist
+  store_distribution:
+    steps:
+      - store_artifacts:
+          path: ./dist
+
+version: 2.1
+jobs:
+  test-linux:
+    executor: linux
+    steps:
+      - checkout
+      - install-deps
+      - run-test
+  test-mac:
+    executor: mac
+    steps:
+      - checkout
+      - install-deps
+      - run-test
+  test-windows:
+    executor: win/vs2019
+    steps:
+      - checkout
+      - install-deps
+      - run-test
+  package-linux:
+    executor: linux
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Package linux
+          command: npx electron-builder --linux
+      - persist_distribution
+  package-mac:
+    executor: mac
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Package mac
+          command: npx electron-builder --mac
+      - persist_distribution
+  package-windows:
+    executor: win/vs2019
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Package windows
+          command: npx electron-builder --win
+      - persist_distribution
+  release:
+    executor: linux
+    steps:
+      - attach_workspace:
+          at: ./
+      - store_artifacts:
+          path: dist
+workflows:
+  version: 2
+  test-and-release:
+    jobs:
+      - test-linux
+      - test-mac
+      - test-windows
+      - package-linux:
+          requires: [test-linux]
+      - package-mac:
+          requires: [test-mac]
+      - package-windows:
+          requires: [test-windows]
+      - release:
+          requires: [package-linux, package-mac, package-windows]
