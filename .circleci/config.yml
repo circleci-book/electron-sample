@@ -1,13 +1,13 @@
 orbs:
-  win: circleci/windows@1.0.0
+  win: circleci/windows@2.4.0
 
 executors:
   linux:
     docker:
-      - image: circleci/node:10.0-browsers
+      - image: circleci/node:12-browsers
   mac:
     macos:
-      xcode: "10.2.0"
+      xcode: "11.3.1"
 
 commands:
   install-deps:
@@ -56,7 +56,7 @@ jobs:
       - install-deps
       - run-test
   test-windows:
-    executor: win/vs2019
+    executor: win/default
     steps:
       - checkout
       - install-deps
@@ -80,7 +80,7 @@ jobs:
           command: npx electron-builder --mac
       - persist_distribution
   package-windows:
-    executor: win/vs2019
+    executor: win/default
     steps:
       - checkout
       - install-deps
