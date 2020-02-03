@@ -58,7 +58,12 @@ const saveErrorScreenshot = function (e) {
     const filename = `ErrorScreenshot-${this.test.title}-${new Date().toISOString()}.png`
         .replace(/\s/g, '_')
         .replace(/:/g, '');
+    this.app.browserWindow.capturePage().then(imageBuffer => {
+        fs.writeFile(`./tmp/${filename}`, imageBuffer, error => {
+            if (error) throw error;
 
-    this.app.client.saveScreenshot(`./tmp/${filename}`)
+            console.info(`Screenshot saved: ${process.cwd()}/tmp/${filename}`);
+        });
+    });
     throw e;
 };
