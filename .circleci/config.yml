@@ -17,7 +17,7 @@ commands:
             - v1-dependencies-{{ arch }}-{{ checksum "package-lock.json" }}
             - v1-dependencies-{{ arch }}
       - run:
-          name: Install deps
+          name: 依存関係のインストール
           command: npm i
       - save_cache:
           paths:
@@ -26,7 +26,7 @@ commands:
   run-test:
     steps:
       - run:
-          name: Run test
+          name: テスト実行
           command: npm run test
       - store_artifacts:
           path: ./tmp
@@ -67,7 +67,7 @@ jobs:
       - checkout
       - install-deps
       - run:
-          name: Package linux
+          name: Linux向けパッケージの作成
           command: npx electron-builder --linux
       - persist_distribution
   package-mac:
@@ -76,7 +76,7 @@ jobs:
       - checkout
       - install-deps
       - run:
-          name: Package mac
+          name: macOS向けパッケージの作成
           command: npx electron-builder --mac
       - persist_distribution
   package-windows:
@@ -85,7 +85,7 @@ jobs:
       - checkout
       - install-deps
       - run:
-          name: Package windows
+          name: Windows向けパッケージの作成
           command: npx electron-builder --win
       - persist_distribution
   release:
