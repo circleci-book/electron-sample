@@ -65,6 +65,7 @@ workflows:
       - package:
           matrix:
             parameters:
-              platform: [linux, win/default, mac]
+              platform: [linux, win/default]
+              # platform: [linux, win/default, mac]
       - release:
           requires: [package]
