@@ -24,7 +24,7 @@ jobs:
             - v1-dependencies-{{ arch }}-{{ checksum "package-lock.json" }}
             - v1-dependencies-{{ arch }}
       - run:
-          name: Install deps
+          name: 依存関係のインストール
           command: npm i
       - save_cache:
           paths:
