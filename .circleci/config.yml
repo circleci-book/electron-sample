@@ -36,14 +36,14 @@ jobs:
               equal: [ << parameters.platform >>, win/default ]
           steps:
             - run:
-                name: Package << parameters.platform >>
+                name: << parameters.platform >>向けパッケージを作成
                 command: npx electron-builder --<< parameters.platform >> --publish never
       - when:
           condition:
             equal: [ << parameters.platform >>, win/default ]
           steps:
             - run:
-                name: Package win
+                name: Windows向けパッケージの作成
                 command: npx electron-builder --win --publish never
       - persist_to_workspace:
           root: ./
