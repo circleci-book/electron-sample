@@ -67,5 +67,6 @@ workflows:
             parameters:
               platform: [linux, win/default]
               # platform: [linux, win/default, mac]
+              # mac Executorは有償プランのみ使用できます
       - release:
           requires: [package]
