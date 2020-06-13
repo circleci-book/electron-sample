@@ -25,7 +25,7 @@ jobs:
             - v1-dependencies-{{ arch }}
       - run:
           name: 依存関係のインストール
-          command: npm i
+          command: npm install
       - save_cache:
           paths:
             - node_modules
