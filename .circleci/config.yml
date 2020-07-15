@@ -4,7 +4,7 @@ orbs:
 executors:
   linux:
     docker:
-      - image: circleci/node:12-browsers
+      - image: cimg/node:12.18
   mac:
     macos:
       xcode: "11.3.1"
